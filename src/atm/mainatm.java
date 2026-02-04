@@ -1,75 +1,78 @@
 package atm;
+
 import java.util.Scanner;
+
 public class mainatm {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		bankaccount account = new bankaccount(1000);
-		atmservice atm = new atmservice(account);
 
-	        System.out.println("===== WELCOME TO ATM =====");
+    public static void main(String[] args) {
 
-	        // PIN setup
-	        if (account.getPin() == -1) {
-	            System.out.print("Set your 4-digit PIN: ");
-	            account.setPin(sc.nextInt());
-	            System.out.println("PIN set successfully!");
-	        }
+        Scanner sc = new Scanner(System.in);
 
-	        // PIN validation
-	        System.out.print("Enter your PIN: ");
-	        int enteredPin = sc.nextInt();
+        System.out.println("===== WELCOME TO ATM =====");
 
-	        if (enteredPin != account.getPin()) {
-	            System.out.println("Invalid PIN. Access denied.");
-	            return;
-	        }
+        // 🔹 ACCOUNT CREATION
+        System.out.print("Set your password: ");
+        String password = sc.nextLine();
 
-	        int choice;
-	        do {
-	            System.out.println("\n---- ATM MENU ----");
-	            System.out.println("1. Check Balance");
-	            System.out.println("2. Deposit");
-	            System.out.println("3. Withdraw");
-	            System.out.println("4. Change PIN");
-	            System.out.println("5. Logout");
-	            System.out.print("Enter your choice: ");
+        bankaccount account = new bankaccount(1000, password);
+        atmservice atm = new atmservice(account);
 
-	            choice = sc.nextInt();
+        System.out.println("Your Account Number: " + account.getAccountNumber());
 
-	            switch (choice) {
-	                case 1:
-	                    atm.checkBalance();
-	                    break;
+        // 🔹 AUTHENTICATION (ONCE)
+        System.out.print("Enter password to login: ");
+        String enteredPassword = sc.nextLine();
 
-	                case 2:
-	                    System.out.print("Enter amount: ");
-	                    atm.deposit(sc.nextDouble());
-	                    break;
+        if (!account.validatePassword(enteredPassword)) {
+            System.out.println("Authentication failed. Exiting.");
+            return;
+        }
 
-	                case 3:
-	                    System.out.print("Enter amount: ");
-	                    atm.withdraw(sc.nextDouble());
-	                    break;
+        System.out.println("Login successful!");
 
-	                case 4:
-	                    System.out.print("Enter old PIN: ");
-	                    int oldPin = sc.nextInt();
-	                    System.out.print("Enter new PIN: ");
-	                    int newPin = sc.nextInt();
-	                    atm.changePin(oldPin, newPin);
-	                    break;
+        // 🔹 SESSION STARTS
+        int choice;
+        do {
+            System.out.println("\n---- ATM MENU ----");
+            System.out.println("1. Check Balance");
+            System.out.println("2. Deposit");
+            System.out.println("3. Withdraw");
+            System.out.println("4. Change Password");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
 
-	                case 5:
-	                    System.out.println("Logged out successfully. Thank you!");
-	                    break;
+            choice = sc.nextInt();
 
-	                default:
-	                    System.out.println("Invalid option!");
-	            }
-	        } while (choice != 5);
+            switch (choice) {
+                case 1:
+                    atm.checkBalance();
+                    break;
 
-	        sc.close();
-	    }
-	}
+                case 2:
+                    System.out.print("Enter amount: ");
+                    atm.deposit(sc.nextDouble());
+                    break;
 
+                case 3:
+                    System.out.print("Enter amount: ");
+                    atm.withdraw(sc.nextDouble());
+                    break;
 
+                case 4:
+                    sc.nextLine(); // consume newline
+                    System.out.print("Enter new password: ");
+                    atm.changePassword(sc.nextLine());
+                    break;
+
+                case 5:
+                    System.out.println("Session ended. Thank you!");
+                    break;
+
+                default:
+                    System.out.println("Invalid option!");
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+}

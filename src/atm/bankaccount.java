@@ -2,28 +2,38 @@ package atm;
 
 public class bankaccount {
 
-	    private double balance;
-	    private int pin;
+    private long accountNumber;
+    private double balance;
+    private String password;
 
-	    public bankaccount(double balance) {
-	        this.balance = balance;
-	        this.pin = -1; // pin not set
-	    }
+    public bankaccount(double balance, String password) {
+        this.accountNumber = generateAccountNumber();
+        this.balance = balance;
+        this.password = password;
+    }
 
-	    public double getBalance() {
-	        return balance;
-	    }
+    // 🔹 RANDOM ACCOUNT NUMBER (NO Random CLASS)
+    private long generateAccountNumber() {
+        return System.currentTimeMillis(); // unique & dynamic
+    }
 
-	    public void setBalance(double balance) {
-	        this.balance = balance;
-	    }
+    public long getAccountNumber() {
+        return accountNumber;
+    }
 
-	    public int getPin() {
-	        return pin;
-	    }
+    public double getBalance() {
+        return balance;
+    }
 
-	    public void setPin(int pin) {
-	        this.pin = pin;
-	    }
-	}
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
 
+    public boolean validatePassword(String inputPassword) {
+        return this.password.equals(inputPassword);
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
+}
